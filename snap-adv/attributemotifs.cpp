@@ -179,9 +179,9 @@ void MultTempMotifCounter::Count3MTEdge23Node(double delta, Counter3D& counts2, 
 		for (int j = 0; j <  nratts_ * nratts_; j++) {
 			p = j / nratts_;
 			q = j % nratts_;
-			counts2(2, i, j) = edge_counts(0, a, 1, b, 0, c, p, q) + edge_counts(1, a, 0, b, 1, c, q, p); // M_{5,1}
-			counts2(1, i, j) = edge_counts(1, a, 0, b, 0, c, p, q) + edge_counts(0, a, 1, b, 1, c, q, p); // M_{5,2}
 			counts2(0, i, j) = edge_counts(0, a, 0, b, 0, c, p, q) + edge_counts(1, a, 1, b, 1, c, q, p); // M_{6,1}
+			counts2(1, i, j) = edge_counts(1, a, 0, b, 0, c, p, q) + edge_counts(0, a, 1, b, 1, c, q, p); // M_{5,2}
+			counts2(2, i, j) = edge_counts(0, a, 1, b, 0, c, p, q) + edge_counts(1, a, 0, b, 1, c, q, p); // M_{5,1}
 			counts2(3, i, j) = edge_counts(0, a, 0, b, 1, c, p, q) + edge_counts(1, a, 1, b, 0, c, q, p); // M_{6,2}
 		}
 	}
@@ -501,18 +501,16 @@ void MultTempMotifCounter::Count3MTEdge3NodeStars(double delta, Counter9D& pre_c
 					for (int lay1 = 0; lay1 < nrlayers_; ++lay1) {
 						for (int dir2 = 0; dir2 < 2; ++dir2) {
 							for (int lay2 = 0; lay2 < nrlayers_; ++lay2) {
-								for (int dir3 = 0; dir3 < 2; ++dir3) {
-									for (int lay3 = 0; lay3 < nrlayers_; ++lay3) {
-										for (int att1 = 0; att1 < nratts_; ++att1) {
-											for (int att2 = 0; att2 < nratts_; ++att2) {
-												for (int att3 = 0; att3 < nratts_; ++att3) {
-													/*pre_counts(dir1, lay1, dir2, lay2, dir3, lay3, att1, att2, att3) -=
-														edge_counts(dir1, lay1, dir2, lay2, dir3, lay3, att1, att2);
-													pos_counts(dir1, lay1, dir2, lay2, dir3, lay3, att1, att2, att3) -=
-														edge_counts(dir1, lay1, dir2, lay2, dir3, lay3, att1, att2);
-													mid_counts(dir1, lay1, dir2, lay2, dir3, lay3, att1, att2, att3) -=
-														edge_counts(dir1, lay1, dir2, lay2, dir3, lay3, att1, att2);*/
-												}
+								for (int lay3 = 0; lay3 < nrlayers_; ++lay3) {
+									for (int att1 = 0; att1 < nratts_; ++att1) {
+										for (int att2 = 0; att2 < nratts_; ++att2) {
+											for (int att3 = 0; att3 < nratts_; ++att3) {
+												pre_counts(dir1, lay1, dir2, lay2, 0, lay3, att1, att2, att2) -= edge_counts(dir1, lay1, dir2, lay2, 0, lay3, att1, att2);
+												pre_counts(dir1, lay1, dir2, lay2, 1, lay3, att1, att2, att2) -= edge_counts(dir1, lay1, dir2, lay2, 1, lay3, att2, att1);
+												pos_counts(dir1, lay1, dir2, lay2, 0, lay3, att1, att2, att2) -= edge_counts(dir1, lay1, dir2, lay2, 0, lay3, att1, att2);
+												pos_counts(dir1, lay1, dir2, lay2, 1, lay3, att1, att2, att2) -= edge_counts(dir1, lay1, dir2, lay2, 1, lay3, att2, att1);
+												mid_counts(dir1, lay1, dir2, lay2, 0, lay3, att1, att2, att2) -= edge_counts(dir1, lay1, dir2, lay2, 0, lay3, att1, att2);
+												mid_counts(dir1, lay1, dir2, lay2, 1, lay3, att1, att2, att2) -= edge_counts(dir1, lay1, dir2, lay2, 1, lay3, att2, att1);
 											}
 										}
 									}
@@ -1264,8 +1262,6 @@ void ThreeMTEdgeTriadCounter::ProcessCurrent(const MultTriadEdgeData& event) {
 		int u_to_v = 0;
 		if (((nbr == node_u_) && dir == 0) || ((nbr == node_v_) && dir == 1)) {
 			u_to_v = 1;
-		}
-		if (u_to_v == 1) {
 			int temp = u_att;
 			u_att = v_att;
 			v_att = temp;
@@ -1275,37 +1271,37 @@ void ThreeMTEdgeTriadCounter::ProcessCurrent(const MultTriadEdgeData& event) {
 			for (int j = 0; j < nrlayers_; j++) {
 				for (int k = 0; k < nratts_; k++) {
 					// i --> j, k --> j, i --> k    
-					triad_counts_(0, i, 0, lay, 0, j, u_att, v_att, k) += mid_sum_(u_to_v, 0, i, 0, j, k);
+					triad_counts_(0, i, 0, lay, 0, j, k, u_att, v_att) += mid_sum_(u_to_v, 0, i, 0, j, k);
 					triad_counts_(0, lay, 0, i, 0, j, u_att, v_att, k) += pos_sum_(u_to_v, 0, i, 1, j, k);
-					triad_counts_(0, i, 0, j, 0, lay, u_att, v_att, k) += pre_sum_(1 - u_to_v, 1, i, 1, j, k);
+					triad_counts_(0, i, 0, j, 0, lay, u_att, k, v_att) += pre_sum_(1 - u_to_v, 1, i, 1, j, k);
 					// i --> j, k --> i, j --> k
-					triad_counts_(1, i, 0, lay, 0, j, u_att, v_att, k) += mid_sum_(u_to_v, 1, i, 0, j, k);
+					triad_counts_(1, i, 0, lay, 0, j, k, u_att, v_att) += mid_sum_(u_to_v, 1, i, 0, j, k);
 					triad_counts_(1, lay, 0, i, 0, j, u_att, v_att, k) += pos_sum_(1 - u_to_v, 0, i, 1, j, k);
-					triad_counts_(1, i, 0, j, 0, lay, u_att, v_att, k) += pre_sum_(1 - u_to_v, 0, i, 1, j, k);
+					triad_counts_(1, i, 0, j, 0, lay, v_att, k, u_att) += pre_sum_(1 - u_to_v, 0, i, 1, j, k);
 					// i --> j, j --> k, i --> k
-					triad_counts_(0, i, 1, lay, 0, j, u_att, v_att, k) += mid_sum_(1 - u_to_v, 0, i, 0, j, k);
+					triad_counts_(0, i, 1, lay, 0, j, k, v_att, u_att) += mid_sum_(1 - u_to_v, 0, i, 0, j, k);
 					triad_counts_(0, lay, 1, i, 0, j, u_att, v_att, k) += pos_sum_(u_to_v, 1, i, 1, j, k);
-					triad_counts_(0, i, 1, j, 0, lay, u_att, v_att, k) += pre_sum_(1 - u_to_v, 1, i, 0, j, k);
+					triad_counts_(0, i, 1, j, 0, lay, u_att, k, v_att) += pre_sum_(1 - u_to_v, 1, i, 0, j, k);
 					// i --> j, i --> k, j --> k
-					triad_counts_(1, i, 1, lay, 0, j, u_att, v_att, k) += mid_sum_(1 - u_to_v, 1, i, 0, j, k);
+					triad_counts_(1, i, 1, lay, 0, j, k, v_att, u_att) += mid_sum_(1 - u_to_v, 1, i, 0, j, k);
 					triad_counts_(1, lay, 1, i, 0, j, u_att, v_att, k) += pos_sum_(1 - u_to_v, 1, i, 1, j, k);
-					triad_counts_(1, i, 1, j, 0, lay, u_att, v_att, k) += pre_sum_(1 - u_to_v, 0, i, 0, j, k);
+					triad_counts_(1, i, 1, j, 0, lay, v_att, k, u_att) += pre_sum_(1 - u_to_v, 0, i, 0, j, k);
 					// i --> j, k --> j, k --> i
-					triad_counts_(0, i, 0, lay, 1, j, u_att, v_att, k) += mid_sum_(u_to_v, 0, i, 1, j, k);
+					triad_counts_(0, i, 0, lay, 1, j, u_att, k, v_att) += mid_sum_(u_to_v, 0, i, 1, j, k);
 					triad_counts_(0, lay, 0, i, 1, j, u_att, v_att, k) += pos_sum_(u_to_v, 0, i, 0, j, k);
-					triad_counts_(0, i, 0, j, 1, lay, u_att, v_att, k) += pre_sum_(u_to_v, 1, i, 1, j, k);
+					triad_counts_(0, i, 0, j, 1, lay, k, u_att, v_att) += pre_sum_(u_to_v, 1, i, 1, j, k);
 					// i --> j, k --> i, k --> j
-					triad_counts_(1, i, 0, lay, 1, j, u_att, v_att, k) += mid_sum_(u_to_v, 1, i, 1, j, k);
+					triad_counts_(1, i, 0, lay, 1, j, u_att, k, v_att) += mid_sum_(u_to_v, 1, i, 1, j, k);
 					triad_counts_(1, lay, 0, i, 1, j, u_att, v_att, k) += pos_sum_(1 - u_to_v, 0, i, 0, j, k);
-					triad_counts_(1, i, 0, j, 1, lay, u_att, v_att, k) += pre_sum_(u_to_v, 0, i, 1, j, k);
+					triad_counts_(1, i, 0, j, 1, lay, k, v_att, u_att) += pre_sum_(u_to_v, 0, i, 1, j, k);
 					// i --> j, j --> k, k --> i
-					triad_counts_(0, i, 1, lay, 1, j, u_att, v_att, k) += mid_sum_(1 - u_to_v, 0, i, 1, j, k);
+					triad_counts_(0, i, 1, lay, 1, j, v_att, k, u_att) += mid_sum_(1 - u_to_v, 0, i, 1, j, k);
 					triad_counts_(0, lay, 1, i, 1, j, u_att, v_att, k) += pos_sum_(u_to_v, 1, i, 0, j, k);
-					triad_counts_(0, i, 1, j, 1, lay, u_att, v_att, k) += pre_sum_(u_to_v, 1, i, 0, j, k);
+					triad_counts_(0, i, 1, j, 1, lay, k, u_att, v_att) += pre_sum_(u_to_v, 1, i, 0, j, k);
 					// i --> j, i --> k, k --> j
-					triad_counts_(1, i, 1, lay, 1, j, u_att, v_att, k) += mid_sum_(1 - u_to_v, 1, i, 1, j, k);
+					triad_counts_(1, i, 1, lay, 1, j, v_att, k, u_att) += mid_sum_(1 - u_to_v, 1, i, 1, j, k);
 					triad_counts_(1, lay, 1, i, 1, j, u_att, v_att, k) += pos_sum_(1 - u_to_v, 1, i, 0, j, k);
-					triad_counts_(1, i, 1, j, 1, lay, u_att, v_att, k) += pre_sum_(u_to_v, 0, i, 0, j, k);
+					triad_counts_(1, i, 1, j, 1, lay, k, v_att, u_att) += pre_sum_(u_to_v, 0, i, 0, j, k);
 				}
 			}
 		}
@@ -1554,37 +1550,37 @@ void ThreeMpTEdgeTriadCounter::PreProcProcessCurrent(const MultTriadEdgeData& ev
 			for (int j = 0; j < nrlayers_; j++) {
 				for (int k = 0; k < nratts_; k++) {
 					// i --> j, k --> j, i --> k    
-					triad_counts_(0, i, 0, lay, 0, j, u_att, v_att, k) += mid_sum_(u_to_v, 0, i, 0, j, k);
+					triad_counts_(0, i, 0, lay, 0, j, k, u_att, v_att) += mid_sum_(u_to_v, 0, i, 0, j, k);
 					triad_counts_(0, lay, 0, i, 0, j, u_att, v_att, k) += pos_sum_(u_to_v, 0, i, 1, j, k);
-					triad_counts_(0, i, 0, j, 0, lay, u_att, v_att, k) += pre_sum_(1 - u_to_v, 1, i, 1, j, k);
+					triad_counts_(0, i, 0, j, 0, lay, u_att, k, v_att) += pre_sum_(1 - u_to_v, 1, i, 1, j, k);
 					// i --> j, k --> i, j --> k
-					triad_counts_(1, i, 0, lay, 0, j, u_att, v_att, k) += mid_sum_(u_to_v, 1, i, 0, j, k);
+					triad_counts_(1, i, 0, lay, 0, j, k, u_att, v_att) += mid_sum_(u_to_v, 1, i, 0, j, k);
 					triad_counts_(1, lay, 0, i, 0, j, u_att, v_att, k) += pos_sum_(1 - u_to_v, 0, i, 1, j, k);
-					triad_counts_(1, i, 0, j, 0, lay, u_att, v_att, k) += pre_sum_(1 - u_to_v, 0, i, 1, j, k);
+					triad_counts_(1, i, 0, j, 0, lay, v_att, k, u_att) += pre_sum_(1 - u_to_v, 0, i, 1, j, k);
 					// i --> j, j --> k, i --> k
-					triad_counts_(0, i, 1, lay, 0, j, u_att, v_att, k) += mid_sum_(1 - u_to_v, 0, i, 0, j, k);
+					triad_counts_(0, i, 1, lay, 0, j, k, v_att, u_att) += mid_sum_(1 - u_to_v, 0, i, 0, j, k);
 					triad_counts_(0, lay, 1, i, 0, j, u_att, v_att, k) += pos_sum_(u_to_v, 1, i, 1, j, k);
-					triad_counts_(0, i, 1, j, 0, lay, u_att, v_att, k) += pre_sum_(1 - u_to_v, 1, i, 0, j, k);
+					triad_counts_(0, i, 1, j, 0, lay, u_att, k, v_att) += pre_sum_(1 - u_to_v, 1, i, 0, j, k);
 					// i --> j, i --> k, j --> k
-					triad_counts_(1, i, 1, lay, 0, j, u_att, v_att, k) += mid_sum_(1 - u_to_v, 1, i, 0, j, k);
+					triad_counts_(1, i, 1, lay, 0, j, k, v_att, u_att) += mid_sum_(1 - u_to_v, 1, i, 0, j, k);
 					triad_counts_(1, lay, 1, i, 0, j, u_att, v_att, k) += pos_sum_(1 - u_to_v, 1, i, 1, j, k);
-					triad_counts_(1, i, 1, j, 0, lay, u_att, v_att, k) += pre_sum_(1 - u_to_v, 0, i, 0, j, k);
+					triad_counts_(1, i, 1, j, 0, lay, v_att, k, u_att) += pre_sum_(1 - u_to_v, 0, i, 0, j, k);
 					// i --> j, k --> j, k --> i
-					triad_counts_(0, i, 0, lay, 1, j, u_att, v_att, k) += mid_sum_(u_to_v, 0, i, 1, j, k);
+					triad_counts_(0, i, 0, lay, 1, j, u_att, k, v_att) += mid_sum_(u_to_v, 0, i, 1, j, k);
 					triad_counts_(0, lay, 0, i, 1, j, u_att, v_att, k) += pos_sum_(u_to_v, 0, i, 0, j, k);
-					triad_counts_(0, i, 0, j, 1, lay, u_att, v_att, k) += pre_sum_(u_to_v, 1, i, 1, j, k);
+					triad_counts_(0, i, 0, j, 1, lay, k, u_att, v_att) += pre_sum_(u_to_v, 1, i, 1, j, k);
 					// i --> j, k --> i, k --> j
-					triad_counts_(1, i, 0, lay, 1, j, u_att, v_att, k) += mid_sum_(u_to_v, 1, i, 1, j, k);
+					triad_counts_(1, i, 0, lay, 1, j, u_att, k, v_att) += mid_sum_(u_to_v, 1, i, 1, j, k);
 					triad_counts_(1, lay, 0, i, 1, j, u_att, v_att, k) += pos_sum_(1 - u_to_v, 0, i, 0, j, k);
-					triad_counts_(1, i, 0, j, 1, lay, u_att, v_att, k) += pre_sum_(u_to_v, 0, i, 1, j, k);
+					triad_counts_(1, i, 0, j, 1, lay, k, v_att, u_att) += pre_sum_(u_to_v, 0, i, 1, j, k);
 					// i --> j, j --> k, k --> i
-					triad_counts_(0, i, 1, lay, 1, j, u_att, v_att, k) += mid_sum_(1 - u_to_v, 0, i, 1, j, k);
+					triad_counts_(0, i, 1, lay, 1, j, v_att, k, u_att) += mid_sum_(1 - u_to_v, 0, i, 1, j, k);
 					triad_counts_(0, lay, 1, i, 1, j, u_att, v_att, k) += pos_sum_(u_to_v, 1, i, 0, j, k);
-					triad_counts_(0, i, 1, j, 1, lay, u_att, v_att, k) += pre_sum_(u_to_v, 1, i, 0, j, k);
+					triad_counts_(0, i, 1, j, 1, lay, k, u_att, v_att) += pre_sum_(u_to_v, 1, i, 0, j, k);
 					// i --> j, i --> k, k --> j
-					triad_counts_(1, i, 1, lay, 1, j, u_att, v_att, k) += mid_sum_(1 - u_to_v, 1, i, 1, j, k);
+					triad_counts_(1, i, 1, lay, 1, j, v_att, k, u_att) += mid_sum_(1 - u_to_v, 1, i, 1, j, k);
 					triad_counts_(1, lay, 1, i, 1, j, u_att, v_att, k) += pos_sum_(1 - u_to_v, 1, i, 0, j, k);
-					triad_counts_(1, i, 1, j, 1, lay, u_att, v_att, k) += pre_sum_(u_to_v, 0, i, 0, j, k);
+					triad_counts_(1, i, 1, j, 1, lay, k, v_att, u_att) += pre_sum_(u_to_v, 0, i, 0, j, k);
 				}
 			}
 		}
