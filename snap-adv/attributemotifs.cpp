@@ -179,9 +179,9 @@ void MultTempMotifCounter::Count3MTEdge23Node(double delta, Counter3D& counts2, 
 		for (int j = 0; j <  nratts_ * nratts_; j++) {
 			p = j / nratts_;
 			q = j % nratts_;
-			counts2(0, i, j) = edge_counts(0, a, 1, b, 0, c, p, q) + edge_counts(1, a, 0, b, 1, c, q, p); // M_{5,1}
+			counts2(2, i, j) = edge_counts(0, a, 1, b, 0, c, p, q) + edge_counts(1, a, 0, b, 1, c, q, p); // M_{5,1}
 			counts2(1, i, j) = edge_counts(1, a, 0, b, 0, c, p, q) + edge_counts(0, a, 1, b, 1, c, q, p); // M_{5,2}
-			counts2(2, i, j) = edge_counts(0, a, 0, b, 0, c, p, q) + edge_counts(1, a, 1, b, 1, c, q, p); // M_{6,1}
+			counts2(0, i, j) = edge_counts(0, a, 0, b, 0, c, p, q) + edge_counts(1, a, 1, b, 1, c, q, p); // M_{6,1}
 			counts2(3, i, j) = edge_counts(0, a, 0, b, 1, c, p, q) + edge_counts(1, a, 1, b, 0, c, q, p); // M_{6,2}
 		}
 	}
@@ -197,29 +197,29 @@ void MultTempMotifCounter::Count3MTEdge23Node(double delta, Counter3D& counts2, 
 			c = (i / (nrlayers_ * nrlayers_));
 			b = (i / nrlayers_) % nrlayers_;
 			a = i % nrlayers_;
-			counts3(2, 4, i, j) = mid_counts(1, a, 1, b, 1, c, p, q, r); // M_{1,1}
+			counts3(3, 5, i, j) = mid_counts(1, a, 1, b, 1, c, p, q, r); // M_{1,1}
 			counts3(2, 5, i, j) = mid_counts(1, a, 1, b, 0, c, p, q, r); // M_{1,2}
-			counts3(2, 2, i, j) = pos_counts(1, a, 1, b, 0, c, p, q, r); // M_{1,5}
-			counts3(2, 3, i, j) = pos_counts(1, a, 1, b, 1, c, p, q, r); // M_{1,6}
-			counts3(0, 4, i, j) = mid_counts(1, a, 0, b, 1, c, p, q, r); // M_{2,1}
-			counts3(0, 5, i, j) = mid_counts(1, a, 0, b, 0, c, p, q, r); // M_{2,2}
-			counts3(3, 2, i, j) = pos_counts(1, a, 0, b, 0, c, p, q, r); // M_{2,5}
-			counts3(3, 3, i, j) = pos_counts(1, a, 0, b, 1, c, p, q, r); // M_{2,6}
-			counts3(3, 4, i, j) = mid_counts(0, a, 0, b, 1, c, p, q, r); // M_{3,1}
-			counts3(3, 5, i, j) = mid_counts(0, a, 1, b, 1, c, p, q, r); // M_{3,2}
-			counts3(0, 2, i, j) = pos_counts(0, a, 1, b, 0, c, p, q, r); // M_{3,3}
-			counts3(0, 3, i, j) = pos_counts(0, a, 1, b, 1, c, p, q, r); // M_{3,4}
-			counts3(1, 4, i, j) = mid_counts(0, a, 0, b, 0, c, p, q, r); // M_{4,1}
-			counts3(1, 5, i, j) = mid_counts(0, a, 0, b, 1, c, p, q, r); // M_{4,2}
-			counts3(1, 2, i, j) = pos_counts(0, a, 0, b, 0, c, p, q, r); // M_{4,3}
-			counts3(1, 3, i, j) = pos_counts(0, a, 0, b, 1, c, p, q, r); // M_{4,4}
-			counts3(0, 6, i, j) = pre_counts(0, a, 1, b, 0, c, p, q, r); // M_{5,3}
-			counts3(2, 6, i, j) = pre_counts(0, a, 1, b, 1, c, p, q, r); // M_{5,4}
-			counts3(1, 6, i, j) = pre_counts(1, a, 0, b, 0, c, p, q, r); // M_{5,5}
-			counts3(3, 6, i, j) = pre_counts(1, a, 0, b, 1, c, p, q, r); // M_{5,6}
-			counts3(0, 7, i, j) = pre_counts(0, a, 0, b, 0, c, p, q, r); // M_{6,3}
-			counts3(2, 7, i, j) = pre_counts(0, a, 0, b, 1, c, p, q, r); // M_{6,4}
-			counts3(1, 7, i, j) = pre_counts(1, a, 1, b, 0, c, p, q, r); // M_{6,5}
+			counts3(2, 3, i, j) = pos_counts(1, a, 1, b, 0, c, p, q, r); // M_{1,5}
+			counts3(3, 3, i, j) = pos_counts(1, a, 1, b, 1, c, p, q, r); // M_{1,6}
+			counts3(3, 4, i, j) = mid_counts(1, a, 0, b, 1, c, p, q, r); // M_{2,1}
+			counts3(2, 4, i, j) = mid_counts(1, a, 0, b, 0, c, p, q, r); // M_{2,2}
+			counts3(0, 3, i, j) = pos_counts(1, a, 0, b, 0, c, p, q, r); // M_{2,5}
+			counts3(1, 3, i, j) = pos_counts(1, a, 0, b, 1, c, p, q, r); // M_{2,6}
+			counts3(0, 5, i, j) = mid_counts(0, a, 0, b, 1, c, p, q, r); // M_{3,1}
+			counts3(1, 5, i, j) = mid_counts(0, a, 1, b, 1, c, p, q, r); // M_{3,2}
+			counts3(2, 2, i, j) = pos_counts(0, a, 1, b, 0, c, p, q, r); // M_{3,3}
+			counts3(3, 2, i, j) = pos_counts(0, a, 1, b, 1, c, p, q, r); // M_{3,4}
+			counts3(0, 4, i, j) = mid_counts(0, a, 0, b, 0, c, p, q, r); // M_{4,1}
+			counts3(1, 4, i, j) = mid_counts(0, a, 0, b, 1, c, p, q, r); // M_{4,2}
+			counts3(0, 2, i, j) = pos_counts(0, a, 0, b, 0, c, p, q, r); // M_{4,3}
+			counts3(1, 2, i, j) = pos_counts(0, a, 0, b, 1, c, p, q, r); // M_{4,4}
+			counts3(1, 6, i, j) = pre_counts(0, a, 1, b, 0, c, p, q, r); // M_{5,3}
+			counts3(1, 7, i, j) = pre_counts(0, a, 1, b, 1, c, p, q, r); // M_{5,4}
+			counts3(2, 6, i, j) = pre_counts(1, a, 0, b, 0, c, p, q, r); // M_{5,5}
+			counts3(2, 7, i, j) = pre_counts(1, a, 0, b, 1, c, p, q, r); // M_{5,6}
+			counts3(0, 6, i, j) = pre_counts(0, a, 0, b, 0, c, p, q, r); // M_{6,3}
+			counts3(0, 7, i, j) = pre_counts(0, a, 0, b, 1, c, p, q, r); // M_{6,4}
+			counts3(3, 6, i, j) = pre_counts(1, a, 1, b, 0, c, p, q, r); // M_{6,5}
 			counts3(3, 7, i, j) = pre_counts(1, a, 1, b, 1, c, p, q, r); // M_{6,6}
 		}
 	}
@@ -234,14 +234,14 @@ void MultTempMotifCounter::Count3MTEdge23Node(double delta, Counter3D& counts2, 
 			c = (i / (nrlayers_ * nrlayers_));
 			b = (i / nrlayers_) % nrlayers_;
 			a = i % nrlayers_;
-			counts3(0, 0, i, j) = triad_counts(0, a, 0, b, 0, c, p, q, r); // M_{1,3}
-			counts3(0, 1, i, j) = triad_counts(0, a, 0, b, 1, c, p, q, r); // M_{1,4}
-			counts3(1, 0, i, j) = triad_counts(0, a, 1, b, 0, c, p, q, r); // M_{2,3}
-			counts3(1, 1, i, j) = triad_counts(0, a, 1, b, 1, c, p, q, r); // M_{3,4}
-			counts3(2, 0, i, j) = triad_counts(1, a, 0, b, 0, c, p, q, r); // M_{3,5}
-			counts3(2, 1, i, j) = triad_counts(1, a, 0, b, 1, c, p, q, r); // M_{3,6}
-			counts3(3, 0, i, j) = triad_counts(1, a, 1, b, 0, c, p, q, r); // M_{4,5}
-			counts3(3, 1, i, j) = triad_counts(1, a, 1, b, 1, c, p, q, r); // M_{4,6}
+			counts3(2, 1, i, j) = triad_counts(0, a, 0, b, 0, c, p, q, r); // M_{1,3}
+			counts3(3, 1, i, j) = triad_counts(0, a, 0, b, 1, c, p, q, r); // M_{1,4}
+			counts3(0, 1, i, j) = triad_counts(0, a, 1, b, 0, c, p, q, r); // M_{2,3}
+			counts3(1, 1, i, j) = triad_counts(0, a, 1, b, 1, c, p, q, r); // M_{2,4}
+			counts3(1, 0, i, j) = triad_counts(1, a, 0, b, 0, c, p, q, r); // M_{3,5}
+			counts3(3, 0, i, j) = triad_counts(1, a, 0, b, 1, c, p, q, r); // M_{3,6}
+			counts3(0, 0, i, j) = triad_counts(1, a, 1, b, 0, c, p, q, r); // M_{4,5}
+			counts3(2, 0, i, j) = triad_counts(1, a, 1, b, 1, c, p, q, r); // M_{4,6}
 		}
 	}
 }
@@ -506,12 +506,12 @@ void MultTempMotifCounter::Count3MTEdge3NodeStars(double delta, Counter9D& pre_c
 										for (int att1 = 0; att1 < nratts_; ++att1) {
 											for (int att2 = 0; att2 < nratts_; ++att2) {
 												for (int att3 = 0; att3 < nratts_; ++att3) {
-													pre_counts(dir1, lay1, dir2, lay2, dir3, lay3, att1, att2, att3) -=
+													/*pre_counts(dir1, lay1, dir2, lay2, dir3, lay3, att1, att2, att3) -=
 														edge_counts(dir1, lay1, dir2, lay2, dir3, lay3, att1, att2);
 													pos_counts(dir1, lay1, dir2, lay2, dir3, lay3, att1, att2, att3) -=
 														edge_counts(dir1, lay1, dir2, lay2, dir3, lay3, att1, att2);
 													mid_counts(dir1, lay1, dir2, lay2, dir3, lay3, att1, att2, att3) -=
-														edge_counts(dir1, lay1, dir2, lay2, dir3, lay3, att1, att2);
+														edge_counts(dir1, lay1, dir2, lay2, dir3, lay3, att1, att2);*/
 												}
 											}
 										}
