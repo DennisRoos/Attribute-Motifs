@@ -26,9 +26,19 @@ void attributeCounting(const TStr multilayer_temporal_graph_filename, const TStr
 	fprintf(output_file, "2-Node-3-Edge Motifs:\n\n");
 
 	for (int l = 0; l < mtmc.nratts_ * mtmc.nratts_; l++) {
-		fprintf(output_file, "Attribute permutation %d:\n", l + 1);
-		for (int k = 0; k < total_motifs; k++) {
-			fprintf(output_file, "Layer permutation %d:\n", k + 1);
+		int q = (l / mtmc.nratts_);
+		int r = l % mtmc.nratts_;
+		fprintf(output_file, "Attribute permutation %d (", l + 1);
+		fprintf(output_file, "%d, ", q);
+		fprintf(output_file, "%d):\n", r);
+		for (int k = 0; k < total_motifs; k++){
+			int c = (k / (total_motifs * total_motifs));
+			int b = (k / total_motifs) % total_motifs;
+			int a = k % total_motifs;
+			fprintf(output_file, "Layer permutation %d (", k + 1);
+			fprintf(output_file, "%d, ", a);
+			fprintf(output_file, "%d, ", b);
+			fprintf(output_file, "%d):\n", c);
 			for (int i = 0; i < 4; i++) {
 				TUInt64 count = counts2(i, k, l);
 				fprintf(output_file, "%s", (count.GetStr()).CStr());
@@ -41,9 +51,21 @@ void attributeCounting(const TStr multilayer_temporal_graph_filename, const TStr
 	fprintf(output_file, "3-Node-3-Edge Motifs:\n\n");
 
 	for (int l = 0; l < total_attributes; l++) {
-		fprintf(output_file, "Attribute permutation %d:\n", l + 1);
+		int p = (l / (mtmc.nratts_ * mtmc.nratts_));
+		int q = (l / mtmc.nratts_) % mtmc.nratts_;
+		int r = l % mtmc.nratts_;
+		fprintf(output_file, "Attribute permutation %d (", l + 1);
+		fprintf(output_file, "%d, ", p);
+		fprintf(output_file, "%d, ", q);
+		fprintf(output_file, "%d):\n", r);
 		for (int k = 0; k < total_motifs; k++) {
-			fprintf(output_file, "Layer permutation %d:\n", k + 1);
+			int c = (k / (total_motifs * total_motifs));
+			int b = (k / total_motifs) % total_motifs;
+			int a = k % total_motifs;
+			fprintf(output_file, "Layer permutation %d (", k + 1);
+			fprintf(output_file, "%d, ", a);
+			fprintf(output_file, "%d, ", b);
+			fprintf(output_file, "%d):\n", c);
 			for (int j = 0; j < 8; j++) {
 				for (int i = 0; i < 4; i++) {
 					TUInt64 count = counts3(i, j, k, l);
@@ -65,7 +87,7 @@ int main(int argc, char* argv[]) {
 	Env = TEnv(argc, argv, TNotify::StdNotify);
 	Env.PrepArgs(TStr::Fmt("attributemotifs. build: %s, %s. Time: %s",
 		__TIME__, __DATE__, TExeTm::GetCurTm()));
-	Try
+	
 
 		const TStr graph_filename =
 		Env.GetIfArgPrefixStr("-i:", "example-annotated-temporal-graph.txt",
