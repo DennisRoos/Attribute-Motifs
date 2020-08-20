@@ -182,7 +182,7 @@ void MultTempMotifCounter::Count3MTEdge23Node(double delta, Counter3D& counts2, 
 			counts2(0, i, j) = edge_counts(0, a, 0, b, 0, c, p, q) + edge_counts(1, a, 1, b, 1, c, q, p); // M_{6,1}
 			counts2(1, i, j) = edge_counts(1, a, 0, b, 0, c, p, q) + edge_counts(0, a, 1, b, 1, c, q, p); // M_{5,2}
 			counts2(2, i, j) = edge_counts(0, a, 1, b, 0, c, p, q) + edge_counts(1, a, 0, b, 1, c, q, p); // M_{5,1}
-			counts2(3, i, j) = edge_counts(0, a, 0, b, 1, c, p, q) + edge_counts(1, a, 1, b, 0, c, q, p); // M_{6,2}
+			counts2(3, i, j) = edge_counts(1, a, 1, b, 0, c, p, q) + edge_counts(0, a, 0, b, 1, c, q, p) ; // M_{6,2}
 		}
 	}
 
@@ -511,6 +511,9 @@ void MultTempMotifCounter::Count3MTEdge3NodeStars(double delta, Counter9D& pre_c
 												pos_counts(dir1, lay1, dir2, lay2, 1, lay3, att1, att2, att2) -= edge_counts(dir1, lay1, dir2, lay2, 1, lay3, att2, att1);
 												mid_counts(dir1, lay1, dir2, lay2, 0, lay3, att1, att2, att2) -= edge_counts(dir1, lay1, dir2, lay2, 0, lay3, att1, att2);
 												mid_counts(dir1, lay1, dir2, lay2, 1, lay3, att1, att2, att2) -= edge_counts(dir1, lay1, dir2, lay2, 1, lay3, att2, att1);
+
+
+											
 											}
 										}
 									}
@@ -739,7 +742,7 @@ void ThreeMTEdgeMotifCounter::IncrementCounts(int event, int layer, const TInt& 
 			for (int k = 0; k < size_; k++) {
 				for (int l = 0; l < nrlayers_; l++) {
 
-					counts3_(i, j, k, l, event, layer, attSrc, attDst) += counts2_(i, j, k, l);//TODO update with extra loops
+					counts3_(i, j, k, l, event, layer, attSrc, attDst) += counts2_(i, j, k, l);
 				}
 			}
 		}
